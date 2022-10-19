@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <form onsubmit="return false;">
+      <div>
+        <label for="firstname">Firstname: </label>
+        <input id="firstname" required/>
+      </div>
+      <div>
+        <label for="name">Name: </label><input id="name" required/>
+      </div>
+      <div>
+        <label for="age">Age: </label>
+        <input id="age" type="number" required/>
+      </div>
+      <div>
+        <label for="phone">Phone: </label>
+        <input id="phone" type="tel" required/>
+      </div>
+      <div>
+        <label for="email">Email: </label>
+        <input id="email" type="email" required/>
+      </div>
+      <div>
+        <label for="student">Student at 42?: </label>
+        <input id="student" type="checkbox" />
+      </div>
+      <div>
+        <label for="gender_male">Male</label>
+        <input
+          id="gender_male"
+          name="gender"
+          value="Male"
+          type="radio"
+		  checked
+        />
+        <label for="gender_female">Female</label>
+        <input id="gender_female" name="gender" value="Female" type="radio" />
+        <label for="gender_other">Other</label>
+        <input id="gender_other" name="gender" value="Other" type="radio" />
+      </div>
+      <button type="submit" onclick="displayFormContents()">
+        Run that sexy Javascript !
+      </button>
+    </form>
+  </body>
+</html>

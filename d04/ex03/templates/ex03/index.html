@@ -1,0 +1,23 @@
+{% extends 'ex03/base.html' %} {% load static %} {% block title %}
+<title>Fifty shades of bic.</title>
+{% endblock title %} {% block style %} {% endblock style %} {% block content %}
+<h1>Fifty shades of bic.</h1>
+<div>
+  <table>
+    <tr>
+      <th>black</th>
+      <th>red</th>
+      <th>blue</th>
+      <th>green</th>
+    </tr>
+    {% for i in range %}
+    <tr class="rotate">
+      <td style="background-color: #00{{i}}00"></td>
+      <td style="background-color: #0000{{i}}"></td>
+      <td style="background-color: #{{i}}0000"></td>
+      <td style="background-color: #{{i}}{{i}}{{i}}"></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

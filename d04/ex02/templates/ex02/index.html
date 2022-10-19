@@ -1,0 +1,12 @@
+{% extends 'ex02/base.html' %} {% load static %} {% block title %}
+<title>First Form.</title>
+{% endblock title %} {% block style %} {% endblock style %} {% block content %}
+<h1>First Form.</h1>
+<form action="" method="post">
+  {% csrf_token %} {{ form.as_table }}
+  <input type="submit" value="Submit" />
+</form>
+<h1>Input History:</h1>
+{% for history in historys reversed %}
+<p>{{ history }}</p>
+{% endfor %} {% endblock %}
