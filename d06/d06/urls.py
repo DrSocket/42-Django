@@ -1,4 +1,4 @@
-"""d05 URL Configuration
+"""d06 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -18,6 +18,6 @@ from django.urls import path
 from django.urls.conf import include
 
 urlpatterns = [
-    path('/', include('ex00.urls')),
+    path('', include('ex.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -1,3 +1,5 @@
+# Quick reference Piscine Django
+
 To untar:
 `tar xvf (filename)`
 
@@ -75,3 +77,9 @@ stop `systemctl --user stop docker-desktop`
 
 ## Django Model Meta Options
 https://docs.djangoproject.com/en/4.1/ref/models/options/
+
+## Django Middleware
+
+### Built-in 
+https://docs.djangoproject.com/en/4.1/ref/middleware/
+### Write your own
