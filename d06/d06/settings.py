@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ex.middleware.randomizer.AnonymousSessionMiddleware',
 ]
 
 ROOT_URLCONF = 'd06.urls'
@@ -124,4 +125,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-USER_NAMES = ['Toto', 'Dada','Fizz', 'Buzz', 'Superman', 'Batman', 'Catwoman', 'Lord Voldemort', 'Nicolai Tesla', 'Jerry']
+USER_NAMES = ['Toto', 'Dada','Fizz', 'Buzz', 'Superman', 'Batman', 'Catwoman', 'Lord Voldemort', 'Nikola Tesla', 'Jerry']

@@ -7,5 +7,8 @@ class Index(View):
 	index_page = "ex/index.html"
 
 	def get(self, request):
-		random_name = random.choice(settings.USER_NAMES)
-		return render(request, self.index_page, {'rand_name': random_name})
+		# if request.COOKIES.get('')
+
+
+		# random_name = random.choice(settings.USER_NAMES)
+		return render(request, self.index_page)
