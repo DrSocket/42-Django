@@ -1,11 +1,90 @@
-{% extends 'ex/base.html' %} {% load bootstrap5 %}
+{% extends 'ex/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
 
-{% block content %}
+{% block title %}
+D06 Django
+{% endblock title %}
 
-<div>
-	<h1>test</h1>
-	{% comment %} <h1>{{ user.username }}</h1> {% endcomment %}
-	{% include 'ex/nav.html' %}
-</div>
+{% block body %}
+  <div class="row justify-content-center p-2">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-4">
 
-{% endblock content %}
+      <!-- Tip form -->
+      {% if form %}
+        <row id='form_tip'>
+          <div class="border border-info">
+            <form class="form-group p-2 mb-0" action="{% url 'ex:index' %}"  method="post">
+              <h6>New tip</h6>
+              {% csrf_token %}
+              {{ form.body.errors }}
+              {% for field in form %}
+                {% bootstrap_field field %}
+              {% endfor %}
+              {% buttons %}
+                <button type="submit" class="btn btn-primary">
+                  Send tip
+                </button>
+              {% endbuttons %}
+            </form>
+          </div>
+        </row>
+      {% endif %}
+
+      <div class="pt-4 pb-2">
+        <h5 id="title_block">{{ title }}</h5>
+    </div>
+
+    <!--Tip block-->
+    {% for tip in tips %}
+      <div class="row-justify pb-4">
+        <div class="card">
+          <div class="card-header">
+            @<a href="{% url 'ex:index' %}" class="hrefuser">{{ tip.author }}</a>
+          </div>
+
+          <div id="content_{{ tip.id }}" class="card-body">
+            <div id="text_{{ tip.id }}" data-body="{{ tip.content }}" class="card-text">
+                <span>{{ tip.content }}</span>
+                {% if user.is_authenticated and user == tip.author %}
+                <a class="btn btn-sm btn-link float-end delete" href="{% url 'ex:tip_del' tip.id %}" data-id="{{ tweet.id }}" role="button">delete</a>
+                {% endif %}
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <a class="btn btn-default fa 
+            {% if user in tip.likes.all %}
+              fa-heart
+            {% else %}
+              fa-heart-o
+            {% endif %}
+            {% if not user.is_authenticated %}
+              disabled
+            {% endif %}
+              likes"
+            href="{% url 'ex:tip_like' tip.id %}" role="button">
+              <span class="count_likes" style="color:gray;">{{ tip.likes.all | length }}</span>
+            </a>
+            <a class="btn btn-default fa
+            {% if user in tip.dislikes.all %}
+              fa fa-heart-crack
+            {% else %}
+              fa fa-heart-o
+            {% endif %}
+            {% if not user.is_authenticated %}
+              disabled
+            {% endif %}
+               dislikes" href="{% url 'ex:tip_dislike' tip.id  %}" role="button">
+              <span class="count_likes" style="color:gray;">{{ tip.dislikes.all | length }}</span>
+            </a>
+          <span class="text-muted text-right" style="font-size: 80%;">{{ tip.date }}</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    </div>
+  </div>
+{% endblock body %}
+

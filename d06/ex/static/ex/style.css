@@ -1,0 +1,15 @@
+.likes {
+    color:red;
+}
+
+.dislikes {
+    color:black;
+}
+
+.count_likes {
+    font-weight: normal;
+}
+
+.nav_pad {
+    padding:20px;
+}

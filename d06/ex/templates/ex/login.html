@@ -1,0 +1,22 @@
+{% extends 'ex/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block body %}
+
+    <h2>Login</h2>
+
+    {% if message %}
+        <div class="text-warning">{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'ex:login' %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% bootstrap_field field %}
+        {% endfor %}
+
+        {% buttons submit='Login' reset="Cancel" %}{% endbuttons %}
+    </form>
+
+{% endblock %}
