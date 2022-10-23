@@ -26,7 +26,7 @@ from django.urls import reverse_lazy
 class FavoriteView(LoginRequiredMixin, ListView, FormView):
     template_name = "ex/favorites.html"
     form_class = FavoriteForm
-    success_url = '/'
+    success_url = 'favorites'
     login_url = '/'
     model: UserFavoriteArticle = UserFavoriteArticle
 

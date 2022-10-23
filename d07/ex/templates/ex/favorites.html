@@ -3,23 +3,27 @@
 {% load bootstrap5 %}
 
 {% block title %}
-{{ object.title }}|
+Favorites
 {% endblock title %}
 
 {% block body %}
-{{object_list}}
 <div class="container mt-5">
   <div class="row justify-content-center p-2">
-    <div class="col-lg-8">
-      <div class="list-group">
-        {% for article in object_list %}
-          {{article.id}}
-          <a href="{% url 'ex:detail' article.id %}" class="list-group-item  list-group-item-action fav_text">
-            {{ article }}
-          </a>
-        {% endfor %}
-      </div>
-    </div>
+    <table class="table table-striped table-bordered table-hover">
+      <tr>
+        <th>Title</th>
+      </tr>
+      {% for favorite in object_list %}
+      <tr>
+        <td>
+          <a
+            href="{% url 'ex:detail' favorite.article.id %}"
+            >{{ favorite.article.title }}</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
 </div>
 {% endblock body %}

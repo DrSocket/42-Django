@@ -3,7 +3,7 @@
 {% load bootstrap5 %}
 
 {% block body %}
-
+<div class="log_reg">
     <h2>Register</h2>
 
     {% if message %}
@@ -17,5 +17,5 @@
     </form>
 
     Already have an account? <a href="{% url 'ex:login' %}">Log In here.</a>
-
+</div>
 {% endblock %}
