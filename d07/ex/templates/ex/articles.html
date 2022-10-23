@@ -29,7 +29,7 @@ Index page
               <td class="col-2">{{ article.title }}</td>
               <td>{{ article.author }}</td>
               <td>{{ article.created }}</td>
-              <td>{{ article.created|timesince }}</td>
+              <td>{{ article.created|truncatechars:20 }}</td>
               <td>{{ article.synopsis }}</td>
               <td>
                 <a href="{% url 'ex:detail' article.id %}" class="btn btn-info">Read</a>
