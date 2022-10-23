@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ room }}
+{% endblock %}
+
+{% block static %}
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+{% endblock %}
+
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+      <div class="col-lg-10 col-md-11 col-sm-12 border m-1">
+        <div class="row justify-content-md  bg-info">
+          <h5 class="pl-4" id='room'>{{ room }}</h5>
+          <button type="button" id="close_room" class="close" aria-label="Close">
+            <span  aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="row align-items">
+
+          <!--main chat-->
+          <div class="col-12 col-md-10 border p-2" id='main_window'>
+            <div id="chat">
+              {% for msg in msgs %}
+                <div>
+                  <span class="row_time">{{ msg[0] }}</span>
+                  <span class="row_user">{{ msg[1] }}:</span>
+                  <span>{{ msg[2] }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!--user list-->
+          <div class="col-0 col-md-2 border bg-light  text-truncate d-lg-block">
+            <ul class="list-group list-group-flush ">
+              <li class="list-group-item p-2 bg-light"><b>Total <span  id='total_users'></span> users</b></li>
+              <div class="d-none d-md-block" id='list_users'>
+                <!--{% for user in users %}-->
+                <!--  <li class="list-group-item p-0 m-0  bg-light">-->
+                <!--    {{ user }}-->
+                <!--  </li>-->
+                <!--{% endfor %}-->
+              </div>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <form class="form-inline w-100"  id="send_msg">
+            <!--<div class="input-group mt-1">-->
+            <div class="input-group w-100">
+              <div class="input-group-prepend">
+                <select class="custom-select" id="for_user">
+                  <option selected value="__All__">All</option>
+                </select>
+              </div>
+              <input type="text" autocomplete="off" class="form-control" placeholder="message" id="text_msg">
+
+
+              <!--<div class="input-group-append">-->
+                <button class="btn btn-outline bg-info" type="submit" id='sbm'>Send message</button>
+              <!--</div>-->
+            <!--</div>-->
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

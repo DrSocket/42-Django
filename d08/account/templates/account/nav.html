@@ -1,0 +1,64 @@
+{% load static %}
+{% load bootstrap5 %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+  <a class="navbar-brand" href="{% url 'ex:index' %}">&nbsp&nbsp&nbspEx042</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ex:index' %}">Articles</a>
+      </li>
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ex:publications' %}">My publications</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ex:favorites' %}">Favorites</a>
+      </li>
+      {% endif %}
+    </ul>
+      {% if user.is_authenticated %}
+        <span class="navbar-text">
+          <a class="nav-link" href="{% url 'ex:logout' %}">Log Out</a>
+        </span>
+        <span class="navbar-text">
+          <a class="nav-link" href="{% url 'ex:index' %}"><strong>{{ user.username }}</strong></a>
+        </span>
+      {% else %}
+
+      <!-- <span class="navbar-text">
+        <a class="nav-link" href="{% url 'ex:login' %}">Log In</a>
+      </span> -->
+      <span class="navbar-text">
+        <a class="nav-link" href="{% url 'ex:register' %}">Register</a>
+      </span>
+      <!-- <span class="navbar-text">
+        <a class="nav-link" href="{% url 'ex:index' %}">(Anonim)</a>
+      </span> -->
+
+      <form class="d-flex" action="{% url 'ex:login' %}"  method="post">
+        {% csrf_token %}
+        <!-- <div class="col-auto"> -->
+          <label for="username" class="visually-hidden">Login</label>
+          <input name="username" type="text" class="form-control form-control-sm me-2" placeholder="Login">
+        <!-- </div> -->
+        <!-- <div class="col-auto"> -->
+          <label for="password" class="visually-hidden">Password</label>
+          <input name="password" type="password" class="form-control form-control-sm me-2" placeholder="Password">
+        <!-- </div> -->
+        <!-- <div class="col-auto"> -->
+          <button type="submit" class="btn btn-secondary me-3">Login</button>
+        <!-- </div> -->
+      </form>
+      {% endif %}
+    
+  </div>
+</div>
+</nav>
+
+<div class="body">
+  {% block body %}
+  {% endblock %}
+</div>

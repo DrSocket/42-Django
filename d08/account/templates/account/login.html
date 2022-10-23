@@ -1,0 +1,31 @@
+{% extends "account/layout.html" %}
+{% load bootstrap5 %}
+{% load static %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block static %}
+
+{% endblock %}
+
+{% block body %}
+  <div class="row justify-content-md-center">
+    <div id="form_place" class="col-12 col-sm-10 col-md-3 col-lg-3">
+    {% if not user.is_authenticated %}
+{#      {% url 'account:account' %}#}
+    <form action="#"  id="login_form" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% bootstrap_field field  layout='inline' form_group_class="form-group form-outline mb-4"%}
+        {% endfor %}
+        <span class="text-danger mt-0 fs-6 " id="error_message"></span>
+        {% buttons submit='Login' %}{% endbuttons %}
+      </form>
+     {% else %}
+      <p>You already logged</p>
+    {% endif %}
+      </div>
+  </div>
+{% endblock %}

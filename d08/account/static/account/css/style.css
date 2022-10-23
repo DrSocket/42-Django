@@ -1,0 +1,37 @@
+.row_time {
+    font-size: 90%;
+    color: gray; }
+  
+.row_user {
+font-weight: bold;
+font-size: 90%;
+color: teal; }
+
+#close_room {
+color: black;
+position: absolute;
+right: 5px; }
+
+@media (max-width: 2000px) and (min-width: 900px) {
+#main_window {
+    height: 30rem;
+    max-height: 30rem;
+    overflow-y: auto; }  }
+
+@media (max-width: 900px) {
+#main_window {
+    overflow-y: auto;
+    height: 15rem;
+    max-height: 15rem;  }  }
+
+#top_username {
+font-weight: bold;
+color: teal; }
+
+.system_msg {
+color: gray;
+font-size: 90%; }
+
+.from_to {
+color: olive;
+font-size: 90%; }
