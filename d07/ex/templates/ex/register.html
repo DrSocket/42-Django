@@ -1,0 +1,21 @@
+{% extends 'ex/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block body %}
+
+    <h2>Register</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'ex:register' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout='inline' form_group_class='w3-input w3-border-0 w3-large p-2'%}
+        {% buttons submit='Register' reset="Cancel" %}{% endbuttons %}
+    </form>
+
+    Already have an account? <a href="{% url 'ex:login' %}">Log In here.</a>
+
+{% endblock %}
