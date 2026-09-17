@@ -1,0 +1,27 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Chat{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar-brand" href="{% url 'chat:rooms' %}">Chatrooms</a>
+    <span class="topbar-user">
+      {% if user.is_authenticated %}
+        Logged as {{ user.username }} &middot;
+      {% endif %}
+      <a href="{% url 'account:account' %}">Account</a>
+    </span>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  {# The only JavaScript library the subject allows. #}
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

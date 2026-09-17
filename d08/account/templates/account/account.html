@@ -1,0 +1,29 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <main class="panel">
+    <h1>Account</h1>
+
+    {# Everything inside #account-state is replaced by the AJAX responses. #}
+    <div id="account-state">
+      {% if user.is_authenticated %}
+        {% include "account/_logged_in.html" %}
+      {% else %}
+        {% include "account/_logged_out.html" %}
+      {% endif %}
+    </div>
+
+    <p class="hint"><a href="{% url 'chat:rooms' %}">Go to the chatrooms</a></p>
+  </main>
+
+  {# The only JavaScript library the subject allows. #}
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'account/js/account.js' %}"></script>
+</body>
+</html>

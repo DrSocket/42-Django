@@ -28,7 +28,7 @@ Index page
               <td>{{ article.title }}</td>
               <td>{{ article.created }}</td>
               <td>{{ article.created|timesince }}</td>
-              <td>{{ article.synopsis }}</td>
+              <td>{{ article.synopsis|truncatechars:20 }}</td>
               <td>
                 <a href="{% url 'ex:detail' article.id %}" class="btn btn-info">Read</a>
               </td>

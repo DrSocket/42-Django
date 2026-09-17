@@ -1,0 +1,24 @@
+{# Login form state. Submitted over AJAX; never a normal form POST. #}
+<form id="login-form" method="post" action="{% url 'account:login' %}" novalidate>
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <ul class="errors" role="alert">
+      {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  {% for field in form %}
+    <p class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <ul class="errors" role="alert">
+          {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </p>
+  {% endfor %}
+
+  <button type="submit" class="btn">Login</button>
+</form>

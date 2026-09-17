@@ -1,0 +1,153 @@
+/* Hand-written styles: jQuery is the only frontend library in the project. */
+
+:root {
+  --bg: #f4f5f7;
+  --panel: #ffffff;
+  --border: #d8dbe0;
+  --ink: #1d2125;
+  --muted: #6b7280;
+  --accent: #2f6feb;
+  --notice: #8a6d1f;
+  --error: #b42318;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* ---- chrome ---- */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-brand { font-weight: 600; text-decoration: none; color: var(--ink); }
+.topbar-user { color: var(--muted); font-size: 14px; }
+.topbar-user a { color: var(--accent); }
+
+.panel {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+h1 { margin: 0 0 16px; font-size: 20px; }
+.hint { color: var(--muted); font-size: 14px; }
+
+/* ---- forms ---- */
+
+.field { margin: 0 0 12px; }
+.field label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 14px; }
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  background: #fff;
+  color: inherit;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover { filter: brightness(1.08); }
+
+.errors {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--error);
+  font-size: 14px;
+}
+
+#logged-as { margin: 0 0 12px; font-size: 17px; font-weight: 600; }
+
+/* ---- room index ---- */
+
+.room-list { margin: 0; padding-left: 18px; }
+.room-list li { margin-bottom: 6px; }
+.room-list a { color: var(--accent); }
+
+/* ---- chat ---- */
+
+.chat-title { margin-bottom: 12px; }
+
+.chat-body {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/*
+ * ex04: a fixed-size container. Messages beyond its height scroll out of
+ * sight at the top and the scrollbar appears on the side.
+ */
+.messages {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 340px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fcfcfd;
+}
+
+.message { margin: 0 0 6px; overflow-wrap: anywhere; }
+.message-user { font-weight: 600; }
+.message-user::after { content: ":"; }
+.notice { margin: 0 0 6px; color: var(--notice); font-style: italic; }
+
+/* ex03: the user list is its own container, clearly set aside. */
+.users {
+  flex: 0 0 180px;
+  height: 340px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fcfcfd;
+}
+
+.users-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.user-list { margin: 0; padding: 0; list-style: none; }
+.user { padding: 2px 0; overflow-wrap: anywhere; }
+
+.chat-form { display: flex; gap: 8px; margin-top: 12px; }
+
+@media (max-width: 640px) {
+  .chat-body { flex-direction: column; }
+  .users { flex-basis: auto; height: 140px; }
+}

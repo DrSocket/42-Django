@@ -1,0 +1,25 @@
+# Secrets — required by the subject (Chapter I): credentials, API keys and
+# environment variables live in a local .env that git must never see.
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/

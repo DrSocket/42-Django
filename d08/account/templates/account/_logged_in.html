@@ -1,0 +1,7 @@
+{# Connected state. The subject asks for this exact wording. #}
+<p id="logged-as">Logged as {{ user.username }}</p>
+
+<form id="logout-form" method="post" action="{% url 'account:logout' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn">Logout</button>
+</form>
