@@ -35,7 +35,13 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 DEBUG = env("DJANGO_DEBUG", "False").lower() in ("1", "true", "yes", "on")
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+# Comma-separated. A VM reached from the host on its own IP sends that IP as
+# the Host header, so it has to be listed or Django answers 400.
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in env("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+    if host.strip()
+]
 
 
 INSTALLED_APPS = [
@@ -95,10 +101,13 @@ CHANNEL_LAYERS = {
     },
 }
 
+# Overridable because sqlite misbehaves on a VirtualBox shared folder
+# (vboxsf does not implement POSIX locking), so inside a VM the database is
+# better placed on the guest filesystem than on the share.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": env("DJANGO_DB_PATH", str(BASE_DIR / "db.sqlite3")),
     }
 }
 

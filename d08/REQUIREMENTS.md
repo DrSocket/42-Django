@@ -21,11 +21,11 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| G1 | Project realized in a virtual machine | ⚙️ environment — see README "Running it in a VM" |
+| G1 | Project realized in a virtual machine | ⚙️ environment — see README "Running it in a VM" (hypervisor choice, guest setup, host access) |
 | G2 | VM has all necessary software, configured and installed | ⚙️ environment — `requirements.txt`, no external service needed |
 | G3 | OS of the VM is your choice | ⚙️ environment |
 | G4 | VM usable from a cluster computer | ⚙️ environment |
-| G5 | Shared folder between VM and host | ⚙️ environment — see README |
+| G5 | Shared folder between VM and host | ⚙️ environment — see README; `DJANGO_DB_PATH` keeps sqlite off the share, where its locking fails |
 | G6 | That folder used to share with the repository at evaluation | ⚙️ environment |
 | G7 | Must not quit unexpectedly | ✅ `manage.py check` clean; 27 tests pass; verified in-browser |
 | G8 | Test programs encouraged | ✅ `account/tests.py`, `chat/tests.py` |
@@ -144,5 +144,9 @@ assignment. Renaming is a one-line change in `manage.py`, `d08/settings.py`,
 - Driven in Chrome against `runserver`: invalid login, valid login, logout, manual refresh,
   two users in isolated sessions, join/leave notices, live user list, three-message history,
   25-message overflow with scroll pinned to the bottom. No console errors or warnings.
-- Dependency portability checked with `uv pip compile --python-platform x86_64-unknown-linux-gnu`:
-  resolves on Python 3.11, 3.12 and 3.13; **fails on 3.10** (`autobahn` requires >= 3.11).
+- Dependency portability checked two ways. Resolution with
+  `uv pip compile --python-platform x86_64-unknown-linux-gnu`: works on Python 3.11,
+  3.12 and 3.13, **fails on 3.10** (`autobahn` requires >= 3.11). Then executed for real
+  on **x86_64 Linux** (Debian 13, Python 3.12, `--platform linux/amd64`): installed from
+  `requirements.txt` with every package coming from a wheel, migrated, seeded the three
+  rooms and passed all 27 tests. The arm64 build host needs no different code or pins.
