@@ -1,0 +1,86 @@
+# Vagrantfile for d08 — satisfies the subject's Chapter I VM requirements:
+#   G1 project realized in a VM · G4 usable from a cluster computer
+#   G5 shared folder between VM and host · G6 that folder shares the repo at eval
+#
+# The repository folder (the directory holding this Vagrantfile) is mounted in
+# the guest at /vagrant — that is the shared folder used at evaluation.
+#
+# Use `./setup.sh` to bring this up on a 42 station (it points Vagrant at roomy
+# scratch storage first). Ubuntu 24.04 is used on purpose: it ships Python 3.12;
+# Ubuntu 22.04 ships 3.10, on which the pinned deps FAIL (autobahn needs >=3.11).
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.hostname = "d08"
+
+  # Reach the dev server from the host browser. With NAT port-forwarding the
+  # Host header stays 127.0.0.1, so ALLOWED_HOSTS needs nothing extra.
+  config.vm.network "forwarded_port", guest: 8000, host: 8000, host_ip: "127.0.0.1"
+
+  # The shared folder (G5/G6): host repo -> /vagrant in the guest.
+  config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name   = "d08-django"
+    vb.memory = 2048
+    vb.cpus   = 2
+  end
+
+  # Provisioning runs as the unprivileged 'vagrant' user so ~ is /home/vagrant,
+  # keeping the venv and the sqlite db on the guest disk.
+  config.vm.provision "shell", privileged: false, inline: <<-'SHELL'
+    set -euo pipefail
+
+    # .env (git-ignored) lives on the share so SECRET_KEY/DEBUG work host-side
+    # too; created only if absent so the key stays stable across re-provisions.
+    if [ ! -f /vagrant/.env ]; then
+      python3 -c "from secrets import choice; import string; print('DJANGO_SECRET_KEY='+''.join(choice(string.ascii_letters+string.digits) for _ in range(50)))" > /vagrant/.env
+      echo "DJANGO_DEBUG=True" >> /vagrant/.env
+      echo "DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost" >> /vagrant/.env
+    fi
+
+    # sqlite must NOT live on the vboxsf share (no POSIX locking -> "database is
+    # locked"). Override the path to the guest home via the environment, which
+    # load_dotenv() does not clobber. Written to .profile so every shell has it.
+    grep -q 'DJANGO_DB_PATH' "$HOME/.profile" || \
+      echo 'export DJANGO_DB_PATH=$HOME/d08-db.sqlite3' >> "$HOME/.profile"
+    export DJANGO_DB_PATH="$HOME/d08-db.sqlite3"
+
+    # Install the project. Skipped if the venv already exists, so re-running
+    # `./setup.sh` (i.e. `vagrant up --provision`) is fast.
+    if [ -x "$HOME/venv-d08/bin/python" ]; then
+      echo "venv already present — skipping apt/pip."
+    else
+      sudo apt-get update -y
+      sudo apt-get install -y python3-venv python3-pip
+      python3 -m venv "$HOME/venv-d08"
+      "$HOME/venv-d08/bin/pip" install --upgrade pip
+      "$HOME/venv-d08/bin/pip" install -r /vagrant/requirements.txt
+    fi
+
+    # Local-only (no network): migrate, seed the rooms, ensure demo users.
+    cd /vagrant
+    "$HOME/venv-d08/bin/python" manage.py migrate --noinput
+    "$HOME/venv-d08/bin/python" manage.py shell -c "
+from django.contrib.auth.models import User
+for u,p,s in [('admin','adminadmin',True),('alice','alicealice',False),('bob','bobbobbob',False)]:
+    o,_=User.objects.get_or_create(username=u, defaults={'is_staff':s,'is_superuser':s})
+    o.set_password(p); o.is_staff=s; o.is_superuser=s; o.save()
+print('users ready: admin/adminadmin (superuser), alice/alicealice, bob/bobbobbob')
+"
+
+    # Convenience launcher used by ./run.sh on the host.
+    cat > "$HOME/run.sh" <<'EOF'
+#!/usr/bin/env bash
+export DJANGO_DB_PATH=$HOME/d08-db.sqlite3
+cd /vagrant
+exec ~/venv-d08/bin/python manage.py runserver 0.0.0.0:8000
+EOF
+    chmod +x "$HOME/run.sh"
+
+    echo
+    echo "=== d08 VM ready ==="
+    echo "Start the server:  ./run.sh   (from the repo, on the host)"
+    echo "Then browse:       http://127.0.0.1:8000/account"
+  SHELL
+end

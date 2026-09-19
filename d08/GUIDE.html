@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>d08 — Defense Guide</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#fff; --ink:#1d2125; --muted:#5b636d; --border:#e2e5ea;
+    --accent:#2f6feb; --accent-soft:#e8f0fe; --code-bg:#f2f3f5; --ok:#1a7f37; --warn:#8a6d1f;
+    --kbd-bg:#eceef1;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0f1216; --panel:#171b21; --ink:#e6e9ee; --muted:#9aa4b0; --border:#2a313a;
+      --accent:#6ea0ff; --accent-soft:#1b2740; --code-bg:#0c0f13; --ok:#4ac26b; --warn:#d9b45a;
+      --kbd-bg:#232a33;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --panel:#171b21; --ink:#e6e9ee; --muted:#9aa4b0; --border:#2a313a;
+    --accent:#6ea0ff; --accent-soft:#1b2740; --code-bg:#0c0f13; --ok:#4ac26b; --warn:#d9b45a; --kbd-bg:#232a33;
+  }
+  :root[data-theme="light"]{
+    --bg:#f6f7f9; --panel:#fff; --ink:#1d2125; --muted:#5b636d; --border:#e2e5ea;
+    --accent:#2f6feb; --accent-soft:#e8f0fe; --code-bg:#f2f3f5; --ok:#1a7f37; --warn:#8a6d1f; --kbd-bg:#eceef1;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:920px;margin:0 auto;padding:32px 20px 96px}
+  header.top{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:8px}
+  h1{font-size:30px;margin:0 0 6px}
+  h2{font-size:22px;margin:44px 0 12px;padding-top:14px;border-top:2px solid var(--border)}
+  h3{font-size:18px;margin:26px 0 8px}
+  p{margin:10px 0}
+  .lead{color:var(--muted);font-size:17px}
+  a{color:var(--accent)}
+  code{background:var(--code-bg);padding:1px 6px;border-radius:5px;font-size:13.5px;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;overflow-wrap:anywhere}
+  pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+    overflow-x:auto;margin:12px 0}
+  pre code{background:none;padding:0;font-size:13px;line-height:1.55}
+  .path{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:5px;
+    padding:1px 7px;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+    font-weight:600;overflow-wrap:anywhere}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px;display:block;overflow-x:auto}
+  th,td{border:1px solid var(--border);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:var(--accent-soft);font-weight:600;white-space:nowrap}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:2px 20px;margin:16px 0}
+  .callout{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;
+    padding:2px 16px;margin:16px 0}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.ok{border-left-color:var(--ok)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+    padding:2px 8px;border-radius:20px;background:var(--accent);color:#fff;vertical-align:middle}
+  kbd{background:var(--kbd-bg);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;
+    padding:1px 6px;font-size:12.5px;font-family:inherit}
+  .toc{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 20px;margin:20px 0}
+  .toc ol{margin:6px 0;padding-left:22px}
+  .toc a{text-decoration:none}
+  .steps{counter-reset:step;list-style:none;padding-left:0}
+  .steps>li{position:relative;padding-left:40px;margin:12px 0}
+  .steps>li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:0;
+    width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;
+    font-size:14px;display:flex;align-items:center;justify-content:center}
+  .req{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent);white-space:nowrap}
+  .muted{color:var(--muted)}
+  hr{border:0;border-top:1px solid var(--border);margin:28px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <span class="tag">Defense guide</span>
+  <h1>d08 — AJAX &amp; WebSockets with Django</h1>
+  <p class="lead">What every point of the subject means, <b>where it lives in the code</b>, how we solve it,
+  and how to <b>prove it to the evaluator</b> live. Written to be read even if you didn't write the code.</p>
+</header>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#run">Run it (host &amp; VM)</a></li>
+    <li><a href="#concepts">Concepts you must be able to explain</a> — AJAX, WebSockets, jQuery-only, CSRF, ASGI</li>
+    <li><a href="#prove">How to <i>prove</i> each rule in the browser</a></li>
+    <li><a href="#general">Chapter I &amp; II — general rules</a></li>
+    <li><a href="#ex00">Exercise 00 — AJAX login/logout</a></li>
+    <li><a href="#ex01">Exercise 01 — Basic chat</a></li>
+    <li><a href="#ex02">Exercise 02 — History</a></li>
+    <li><a href="#ex03">Exercise 03 — User list</a></li>
+    <li><a href="#ex04">Exercise 04 — Scroll</a></li>
+    <li><a href="#users">Creating users</a></li>
+    <li><a href="#demo">Defense demo script</a></li>
+    <li><a href="#qa">Questions an evaluator may ask</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="run">1. Run it</h2>
+
+<h3>On the VM (what you'll grade on)</h3>
+<pre><code>cd d08
+export VAGRANT_HOME=/goinfre/lucisanc/.vagrant.d   # keep the box on the big disk
+vagrant up                      # boot the Ubuntu 24.04 guest (first time only)
+vagrant ssh -c '~/run.sh'       # start the server inside the VM
+# then on the HOST browser:  http://127.0.0.1:8000/account
+vagrant halt                    # stop the VM when done</code></pre>
+
+<h3>Directly on the host (quick check, no VM)</h3>
+<pre><code>cd d08
+source .venv/bin/activate
+python manage.py runserver
+# http://127.0.0.1:8000/account</code></pre>
+
+<div class="callout">
+  <p><b>Demo accounts (already created):</b> <code>admin</code>/<code>adminadmin</code> (superuser),
+  <code>alice</code>/<code>alicealice</code>, <code>bob</code>/<code>bobbobbob</code>.
+  Make more with <code>python manage.py createuser &lt;name&gt;</code> — see
+  <a href="#users">§9</a>.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="concepts">2. Concepts you must be able to explain</h2>
+
+<h3>What is AJAX?</h3>
+<p><b>AJAX = Asynchronous JavaScript And XML.</b> The name is historical; in practice it just means:
+<b>JavaScript makes an HTTP request in the background and updates part of the page with the answer,
+without reloading the whole page.</b> The browser's normal behaviour when you submit a form is to
+throw the current page away and load a fresh one from the server. AJAX deliberately prevents that and
+does the request itself.</p>
+<p>Here it's done with jQuery's <code>$.ajax()</code> — a thin wrapper over the browser's
+<code>XMLHttpRequest</code>. The server answers with <b>JSON</b> (not a full HTML page), and the
+JavaScript drops that fragment into the page.</p>
+
+<h3>What is a WebSocket, and how is it different from AJAX?</h3>
+<table>
+  <tr><th></th><th>AJAX (ex00)</th><th>WebSocket (ex01–04)</th></tr>
+  <tr><td>Shape</td><td>One request → one response, then it's over</td><td>One connection stays <b>open</b>, both sides send anytime</td></tr>
+  <tr><td>Who can start a message</td><td>Only the browser asks; server only replies</td><td>Browser <b>and</b> server can push (server can announce "bob joined")</td></tr>
+  <tr><td>Good for</td><td>Login, form submits</td><td>Live chat, where others' messages must arrive on their own</td></tr>
+  <tr><td>URL scheme</td><td><code>http://</code></td><td><code>ws://</code> (or <code>wss://</code> over HTTPS)</td></tr>
+</table>
+<p>A chat can't be built on AJAX alone: the browser would have to keep asking "any new messages?"
+(polling). A WebSocket lets the server push a new message the instant it's posted. That's why the
+subject requires WebSockets and forbids AJAX for the chat.</p>
+
+<h3>What is jQuery, and why is it "the only library"?</h3>
+<p>jQuery is a JavaScript helper library (the <code>$(...)</code> you see everywhere). The subject
+allows <b>only</b> jQuery as a front-end library. We load exactly one library file,
+<span class="path">static/js/jquery.min.js</span> (v3.7.1). The chat's WebSocket is a
+<b>built-in browser feature</b> (<code>new WebSocket(...)</code>), not a library — so using it does not
+break the rule. No Bootstrap, no Socket.IO, no React.</p>
+
+<h3>What is the CSRF token?</h3>
+<p>Django blocks POST requests that don't carry a secret <b>CSRF token</b>, to stop other websites from
+submitting forms as you. Every form includes <code>{% csrf_token %}</code>, and jQuery's
+<code>$form.serialize()</code> sends that hidden field along with the AJAX POST — which is why login and
+logout are accepted. (For the WebSocket, Django's session cookie is what authenticates the user.)</p>
+
+<h3>Why ASGI / Channels / daphne?</h3>
+<p>Plain Django speaks <b>WSGI</b> — HTTP request/response only, no long-lived connections. WebSockets
+need <b>ASGI</b> (asynchronous). We add <b>django-channels</b> (the WebSocket framework) and
+<b>daphne</b> (an ASGI server). <code>daphne</code> is listed first in <code>INSTALLED_APPS</code> so
+that <code>runserver</code> becomes an ASGI server able to serve <i>both</i> the normal pages and the
+WebSocket. The split is wired in <span class="path">d09/asgi.py</span>: HTTP → Django, WebSocket → the
+chat consumer.</p>
+
+<!-- ============================================================ -->
+<h2 id="prove">3. How to <i>prove</i> each rule in the browser</h2>
+<p>Open the developer tools with <kbd>F12</kbd> (or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and use
+the <b>Network</b> tab. This is how you show the evaluator the rules are actually respected.</p>
+
+<h3>"Login/logout communicate <u>only</u> through AJAX" &amp; "the page is never refreshed"</h3>
+<ol class="steps">
+  <li>Open <code>/account</code>, then DevTools → <b>Network</b>. Tick the <b>Fetch/XHR</b> filter.</li>
+  <li>Log in. You see one request: <code>POST /account/login</code>, <b>Type = xhr/fetch</b>, and its
+      response is JSON (<code>{"authenticated": true, "html": "…"}</code>). That is the AJAX call.</li>
+  <li>Switch the filter to <b>Doc</b> (top-level documents). The count stays at <b>1</b> — the first page
+      load — and does <i>not</i> increase when you log in or out. No new document = <b>no refresh</b>.</li>
+  <li>Extra proof the page object survives: in the <b>Console</b> type <code>window.marker = 42</code>
+      before logging in, then read <code>window.marker</code> after. It's still <code>42</code> — a real
+      refresh would have wiped it.</li>
+  <li>Log out: one more <code>POST /account/logout</code> xhr, still zero new document loads.</li>
+</ol>
+
+<h3>"Chat uses jQuery + WebSockets, <u>no</u> AJAX"</h3>
+<ol class="steps">
+  <li>Open a chatroom, DevTools → Network → <b>WS</b> filter. You see one entry:
+      <code>ws/chat/general/</code> with status <b>101 Switching Protocols</b> (the WebSocket handshake).</li>
+  <li>Click it → <b>Messages</b> tab: you watch frames flow both ways (your posts going out, others'
+      messages and the user-list coming in).</li>
+  <li>Switch to the <b>Fetch/XHR</b> filter and chat some more: <b>zero</b> XHR/fetch requests appear.
+      All traffic is on the socket. That's "WebSockets, no AJAX".</li>
+</ol>
+
+<h3>"jQuery is the only library"</h3>
+<p>Network → <b>JS</b> filter. Only three scripts ever load: <code>jquery.min.js</code> (the one allowed
+library) plus our own <code>account.js</code> / <code>chat.js</code>. No other library is fetched.</p>
+
+<!-- ============================================================ -->
+<h2 id="general">4. Chapter I &amp; II — general rules</h2>
+<table>
+  <tr><th>Rule</th><th>Where / how</th></tr>
+  <tr><td><span class="req">G1,G4</span> Runs in a VM, usable from a cluster station</td>
+      <td><span class="path">Vagrantfile</span> — boots Ubuntu 24.04 in VirtualBox on this station.</td></tr>
+  <tr><td><span class="req">G5,G6</span> Shared folder host↔VM, used to share the repo</td>
+      <td><span class="path">Vagrantfile</span> <code>synced_folder "." → /vagrant</code>: the repo is the shared folder inside the VM.</td></tr>
+  <tr><td><span class="req">G10</span> Credentials in a git-ignored <code>.env</code> <span class="muted">(new in v1.2)</span></td>
+      <td><span class="path">d09/settings.py</span> reads <code>DJANGO_SECRET_KEY</code>/<code>DEBUG</code> from <code>.env</code> via <code>load_dotenv</code>; a missing var raises a loud error (no hardcoded fallback). <code>.env</code> is the first line of <span class="path">.gitignore</span>; only <span class="path">.env.example</span> (placeholders) is committed. DB is sqlite, so there is no DB password anywhere.</td></tr>
+  <tr><td><span class="req">S1</span> jQuery is the only JS library</td>
+      <td>Only <span class="path">static/js/jquery.min.js</span> is loaded; transport is the native <code>WebSocket</code>. See <a href="#prove">§3</a>.</td></tr>
+  <tr><td><span class="req">S2</span> One Django project, not split per exercise</td>
+      <td>One Django project (package <code>d09</code>), two apps: <code>account</code> (ex00) and <code>chat</code> (ex01–04). No <code>exNN/</code> folders.</td></tr>
+  <tr><td><span class="req">S3</span> Keep the default admin app</td>
+      <td><code>django.contrib.admin</code> is installed and routed at <code>/admin/</code> in <span class="path">d09/urls.py</span>; <code>Room</code> and <code>Message</code> are registered in <span class="path">chat/admin.py</span>.</td></tr>
+  <tr><td><span class="req">S4</span> <code>requirements.txt</code> from <code>pip freeze</code></td>
+      <td><span class="path">requirements.txt</span>, 26 fully-pinned packages.</td></tr>
+</table>
+<div class="callout warn">
+  <p><b>The one wording gotcha:</b> the subject says "create a project named <code>d09</code>", so the
+  Django project package <b>is</b> named <code>d09</code> (<code>manage.py</code> points at
+  <code>d09.settings</code>). The assignment day and the git repository are <b>d08</b> — the subject
+  text carried over from the next day. In short: the repo/day is <code>d08</code>, the Django project
+  inside it is <code>d09</code>.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ex00">5. Exercise 00 — "AJAX my formula!" <span class="muted">(app: <code>account</code>)</span></h2>
+<p>A login/logout system that talks to the server <b>only through AJAX</b>, on a single page at
+<code>/account</code> that is <b>never refreshed</b>.</p>
+
+<h3>The moving parts</h3>
+<table>
+  <tr><th>File</th><th>Role</th></tr>
+  <tr><td><span class="path">account/urls.py</span></td><td>The 3 URLs: <code>/account</code> (page), <code>/account/login</code>, <code>/account/logout</code>.</td></tr>
+  <tr><td><span class="path">account/views.py</span></td><td>The server logic. <code>login</code>/<code>logout</code> are POST-only and return <b>JSON</b>.</td></tr>
+  <tr><td><span class="path">account/templates/account/account.html</span></td><td>The page shell with the <code>#account-state</code> box that gets swapped.</td></tr>
+  <tr><td><span class="path">…/_logged_out.html</span> / <span class="path">_logged_in.html</span></td><td>The two states, as fragments the AJAX responses reuse.</td></tr>
+  <tr><td><span class="path">account/static/account/js/account.js</span></td><td>The AJAX itself.</td></tr>
+</table>
+
+<h3>How "only through AJAX" is achieved</h3>
+<p>The form's normal submission (which reloads the page) is cancelled with
+<code>event.preventDefault()</code>, then jQuery sends the request itself:</p>
+<pre><code>// account/static/account/js/account.js
+$(document).on("submit", "#login-form", function (event) {
+    event.preventDefault();                 // stop the browser reloading the page
+    var $form = $(this);
+    $.ajax({
+        type: "POST",
+        url:  $form.attr("action"),
+        data: $form.serialize(),            // includes the CSRF token
+        dataType: "json"
+    }).done(function (response) {
+        $("#account-state").html(response.html);   // swap in the new state, no reload
+    });
+});</code></pre>
+<p class="muted">The handlers are bound to <code>document</code>, not to the form, because the form is
+removed from the page on every state change — a handler bound to the form itself would die with it.</p>
+
+<p>The server never returns a full page for these two URLs — it returns JSON, the tell-tale sign of an
+AJAX endpoint:</p>
+<pre><code># account/views.py
+@require_POST                                    # GET is refused (405) — POST only
+def login(request):
+    form = AuthenticationForm(request, data=request.POST)
+    if not form.is_valid():
+        return JsonResponse({"authenticated": False,
+                             "html": _logged_out_html(request, form)})  # form + errors
+    auth_login(request, form.get_user())
+    return JsonResponse({"authenticated": True,
+                         "html": _logged_in_html(request)})             # "Logged as <user>"</code></pre>
+
+<h3>Requirement-by-requirement</h3>
+<table>
+  <tr><th>ID</th><th>Requirement</th><th>How</th></tr>
+  <tr><td><span class="req">E00.3</span></td><td>URL <code>127.0.0.1:8000/account</code></td><td><code>path("account", views.account)</code> in <span class="path">account/urls.py</span>.</td></tr>
+  <tr><td><span class="req">E00.4</span></td><td>Login/logout only through AJAX</td><td>The <code>$.ajax</code> calls above; endpoints return JSON. Proof in <a href="#prove">§3</a>.</td></tr>
+  <tr><td><span class="req">E00.5</span></td><td>Not connected → standard login form</td><td><span class="path">_logged_out.html</span>, built from Django's <code>AuthenticationForm</code>.</td></tr>
+  <tr><td><span class="req">E00.6/11</span></td><td>Login &amp; logout are POST</td><td><code>@require_POST</code> on both views (a GET returns 405).</td></tr>
+  <tr><td><span class="req">E00.7</span></td><td>Invalid form → errors on the page</td><td>Invalid form is re-rendered <i>with</i> its errors and returned as the fragment; the JS swaps it in.</td></tr>
+  <tr><td><span class="req">E00.8</span></td><td>Valid form → it disappears, new behaviour, no refresh</td><td>The <code>#account-state</code> box is replaced by the "Logged as…" fragment.</td></tr>
+  <tr><td><span class="req">E00.9/10</span></td><td>Connected → "Logged as &lt;user&gt;" + Logout button</td><td><span class="path">_logged_in.html</span> — that exact wording, plus the logout form.</td></tr>
+  <tr><td><span class="req">E00.13</span></td><td>The page must never be refreshed</td><td>Only <code>#account-state</code>'s inner HTML ever changes; no navigation happens. Proof in <a href="#prove">§3</a>.</td></tr>
+  <tr><td><span class="req">E00.14</span></td><td>Manual refresh returns to the prior state (minus errors)</td><td>The page view renders the correct state <i>server-side</i> from <code>user.is_authenticated</code>, so reloading always lands on login-or-logged-in — never on an error state.</td></tr>
+  <tr><td><span class="req">E00.15</span></td><td>Bootstrap allowed; <code>AuthenticationForm</code> free</td><td>We use <code>AuthenticationForm</code>; Bootstrap is deliberately <i>not</i> used, to keep jQuery the only library (S1).</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="ex01">6. Exercise 01 — Basic chat <span class="muted">(app: <code>chat</code>)</span></h2>
+<p>A page with 3 links to 3 chatrooms whose names live in the database; each room is a working chat over
+WebSockets, for logged-in users only.</p>
+
+<table>
+  <tr><th>File</th><th>Role</th></tr>
+  <tr><td><span class="path">chat/models.py</span></td><td><code>Room</code> (names in DB — the "suitable model") and <code>Message</code> (history).</td></tr>
+  <tr><td><span class="path">chat/migrations/0002_default_rooms.py</span></td><td>Seeds the 3 rooms, so <code>migrate</code> alone gives a working project.</td></tr>
+  <tr><td><span class="path">chat/views.py</span></td><td>The room index and one room page, both <code>@login_required</code>.</td></tr>
+  <tr><td><span class="path">chat/routing.py</span></td><td>The WebSocket URL <code>ws/chat/&lt;slug&gt;/</code>.</td></tr>
+  <tr><td><span class="path">chat/consumers.py</span></td><td>The server side of the socket: join, post, broadcast, history, users.</td></tr>
+  <tr><td><span class="path">chat/static/chat/js/chat.js</span></td><td>The browser side of the socket.</td></tr>
+</table>
+
+<h3>Names live in the database <span class="req">(E01.2/3)</span></h3>
+<p><code>Room</code> is a model; the three rooms are inserted by a <b>data migration</b> rather than
+hardcoded, and the index lists whatever is in the table:</p>
+<pre><code># chat/views.py
+@login_required
+def rooms(request):
+    return render(request, "chat/rooms.html", {"rooms": Room.objects.all()})</code></pre>
+
+<h3>Logged-in users only <span class="req">(E01.6)</span></h3>
+<p>Two layers: the <i>pages</i> use <code>@login_required</code>; the <i>socket</i> checks the user and
+refuses anonymous connections. Django's session cookie identifies the user on the socket, thanks to
+<code>AuthMiddlewareStack</code> in <span class="path">d09/asgi.py</span>.</p>
+<pre><code># chat/consumers.py — connect()
+user = self.scope.get("user")
+if user is None or not user.is_authenticated:
+    await self.close(code=4401)      # anonymous → socket refused
+    return</code></pre>
+
+<h3>Post a message, everyone in the room sees it <span class="req">(E01.9/10)</span></h3>
+<p>One <b>channel-layer group per room</b>. A posted message is saved, then broadcast to the group, which
+includes the sender — so every member (and only that room's members) receives it.</p>
+<pre><code># chat/consumers.py — receive_json()
+await self._save_message(self.room, self.scope["user"], body)
+await self.channel_layer.group_send(
+    self.room.group_name,                                   # "chat.&lt;slug&gt;"
+    {"type": "chat.message", "username": self.username, "body": body},
+)</code></pre>
+<pre><code>// chat/static/chat/js/chat.js — sending, and receiving for everyone
+$form.on("submit", function (e){ e.preventDefault();
+    socket.send(JSON.stringify({ body: $input.val().trim() })); });   // no AJAX — the socket
+socket.onmessage = function (event){
+    var data = JSON.parse(event.data);
+    if (data.type === "message") appendMessage(data.username, data.body);
+    // ... "join" / "leave" / "users" handled here too
+};</code></pre>
+
+<h3>Bottom, ascending, with the poster's name, never reordered <span class="req">(E01.11/12)</span></h3>
+<p>The DB orders messages oldest-first (<code>Meta.ordering = ("created", "id")</code>), and the client
+<b>only ever appends</b> a row — it never inserts at the top, replaces, or sorts. So the order the server
+sends is the order shown, permanently.</p>
+
+<h3>"&lt;username&gt; has joined the chat" — for everyone, joiner included <span class="req">(E01.13)</span></h3>
+<pre><code># chat/consumers.py — after accept(), broadcast to the whole group (incl. the joiner)
+await self.channel_layer.group_send(
+    self.room.group_name, {"type": "chat.join", "username": self.username})</code></pre>
+<p class="muted">Messages can't inject HTML: the client builds rows with jQuery's <code>.text()</code>,
+which escapes the content (a small but real safety point worth mentioning).</p>
+
+<!-- ============================================================ -->
+<h2 id="ex02">7. Exercise 02 — History</h2>
+<p><span class="req">E02.1/2</span> A user joining sees the <b>last three</b> messages of that room,
+<b>oldest to newest</b>. On connect, before the join notice, the consumer replays them to that one
+socket:</p>
+<pre><code># chat/consumers.py
+@database_sync_to_async
+def _recent_messages(self, room):
+    limit = getattr(settings, "CHAT_HISTORY_SIZE", 3)          # 3, from settings.py
+    newest_first = room.messages.select_related("user").order_by("-created", "-id")[:limit]
+    return [{"username": m.user.get_username(), "body": m.body}
+            for m in reversed(list(newest_first))]             # → oldest first</code></pre>
+<p>We fetch the newest 3 (efficient — a small <code>LIMIT</code>, not the whole table) and
+<code>reverse</code> them so they arrive in the right order. <span class="req">E02.3</span>: they are
+replayed <b>over the socket</b>, not fetched by AJAX.</p>
+
+<!-- ============================================================ -->
+<h2 id="ex03">8. Exercise 03 — User list</h2>
+<p>A live list of connected users, set apart from the messages, that updates by itself; plus a
+"&lt;username&gt; has left the chat" notice.</p>
+
+<h3>Who is connected <span class="req">(E03.1/3/4/6)</span></h3>
+<p>Connections are tracked in a per-room dictionary, <b>keyed by channel</b> (not by username) so that the
+same person in two tabs counts correctly and closing one tab doesn't remove them:</p>
+<pre><code># chat/consumers.py
+_CONNECTED = {}   # {room_slug: {channel_name: username}}
+
+def _usernames(slug):
+    return sorted(set(_CONNECTED.get(slug, {}).values()))   # deduplicated, for display</code></pre>
+<p>Whenever someone joins or leaves, the server pushes the fresh list to the whole room — the list updates
+<b>by itself</b>, with no polling and no AJAX:</p>
+<pre><code>await self.channel_layer.group_send(
+    self.room.group_name, {"type": "chat.users", "users": _usernames(self.slug)})</code></pre>
+<p><span class="req">E03.2</span> The list is a separate container in the template
+(<span class="path">chat/templates/chat/room.html</span>): a <code>&lt;aside class="users"&gt;</code> beside
+the <code>&lt;div id="messages"&gt;</code>.</p>
+
+<h3>"&lt;username&gt; has left the chat" <span class="req">(E03.5)</span></h3>
+<pre><code># chat/consumers.py — disconnect()
+if was_last:      # only when the user's last tab closes
+    await self.channel_layer.group_send(
+        self.room.group_name, {"type": "chat.leave", "username": self.username})</code></pre>
+<p>The client appends it as a notice row, after the posted messages, exactly like the join notice.</p>
+
+<!-- ============================================================ -->
+<h2 id="ex04">9. Exercise 04 — Scroll</h2>
+<p><span class="req">E04.1/2</span> The message list is a <b>fixed-size</b> box; overflow scrolls out at the
+top with a scrollbar on the side. Pure CSS:</p>
+<pre><code>/* static/css/app.css */
+.messages { height: 340px; overflow-y: auto; /* … */ }</code></pre>
+<p><span class="req">E04.3</span> The scrollbar is always pinned to the bottom so the newest message is
+visible — done after every append:</p>
+<pre><code>// chat/static/chat/js/chat.js
+function scrollToBottom(){ $messages.scrollTop($messages.prop("scrollHeight")); }
+function append($row){ $messages.append($row); scrollToBottom(); }   // called on every new row</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="users">10. Creating users</h2>
+<p>The subject's login system has <b>no sign-up page</b> (it never asks for one — adding one would pull in
+behaviour outside the AJAX-login scope). Accounts are made on the server side. Three ways, easiest first:</p>
+
+<h3>a) The custom command <span class="tag">added for this</span></h3>
+<pre><code>python manage.py createuser alice                  # asks for a password (hidden, twice)
+python manage.py createuser alice --password pw     # non-interactive
+python manage.py createuser boss  --admin           # a superuser instead of a normal user</code></pre>
+<p class="muted">Defined in <span class="path">account/management/commands/createuser.py</span>. It
+refuses a name that already exists and refuses an empty password. Inside the VM, prefix with
+<code>vagrant ssh -c "cd /vagrant &amp;&amp; ~/venv-d08/bin/python manage.py createuser alice --password pw"</code>.</p>
+
+<h3>b) The admin site (visual — nice to show the evaluator, and proves S3)</h3>
+<p>Log in at <code>/admin/</code> as <code>admin</code>/<code>adminadmin</code> →
+<b>Authentication and Authorization → Users → Add user</b>.</p>
+
+<h3>c) Django's built-in, for a superuser</h3>
+<pre><code>python manage.py createsuperuser</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="demo">11. Defense demo script</h2>
+<ol class="steps">
+  <li>Start the server (VM: <code>vagrant ssh -c '~/run.sh'</code>). Open <code>http://127.0.0.1:8000/account</code> on the host.</li>
+  <li>Open DevTools → Network. <b>ex00:</b> submit a <i>wrong</i> password → errors appear in place (E00.7). Log in with <code>alice</code>/<code>alicealice</code> → form is replaced by "Logged as alice" (E00.8/9). Show the <b>Fetch/XHR</b> requests and the <b>Doc</b> count staying at 1 (§3).</li>
+  <li>Refresh the page manually → still "Logged as alice", no error state (E00.14). Log out → back to the form (E00.12).</li>
+  <li><b>ex01:</b> click <b>Go to the chatrooms</b> → three rooms from the DB (E01.2). Enter <i>General</i>; show the <b>WS</b> connection and <b>zero</b> XHR (§3).</li>
+  <li>Open a second browser/incognito, log in as <code>bob</code>, enter the same room. Each sees "<i>… has joined the chat</i>" and both names in the user list (E01.13, E03.1/3).</li>
+  <li>Post messages both ways → they appear for both, bottom, in order, with names (E01.9–12).</li>
+  <li>Post &gt; ~15 messages → the box scrolls, pinned to the newest (E04). Reload as a third user (or re-enter) → only the last 3 messages replay (E02).</li>
+  <li>Close bob's tab → alice sees "<i>bob has left the chat</i>" and bob drops off the list (E03.4/5).</li>
+  <li>Show <code>/admin/</code> works (S3) and <span class="path">.gitignore</span> lists <code>.env</code> (G10).</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="qa">12. Questions an evaluator may ask</h2>
+
+<p><b>"Show me that login really uses AJAX and doesn't reload."</b> → Network tab: the <code>POST</code> is
+type xhr, the response is JSON, and the Doc/navigation count never increases. Or the
+<code>window.marker</code> trick (§3).</p>
+
+<p><b>"The chat must not use AJAX — prove it."</b> → Network → WS shows one socket; Fetch/XHR shows nothing
+while chatting. All messages are WebSocket frames.</p>
+
+<p><b>"Only jQuery is allowed."</b> → Only <code>jquery.min.js</code> loads as a library; the chat uses the
+browser's built-in <code>new WebSocket(...)</code>, which is not a library.</p>
+
+<p><b>"Where are the room names stored?"</b> → In the database, model <code>Room</code>
+(<span class="path">chat/models.py</span>), seeded by a data migration. Show them in <code>/admin/</code>.</p>
+
+<p><b>"Why daphne / channels?"</b> → WebSockets need ASGI; Django alone is WSGI. daphne is the ASGI server,
+channels is the WebSocket framework. <span class="path">d09/asgi.py</span> routes HTTP to Django and WS to
+the consumer.</p>
+
+<p><b>"What happens if an anonymous user hits the socket?"</b> → The consumer closes it with code 4401
+(<span class="path">chat/consumers.py</span>), and the pages are <code>@login_required</code>.</p>
+
+<p><b>"Why is the history exactly 3 and in that order?"</b> → <code>CHAT_HISTORY_SIZE = 3</code> in
+<span class="path">settings.py</span>; we take the newest 3 by <code>-created</code> then reverse to
+oldest-first (§7).</p>
+
+<p><b>"Where are your credentials?"</b> → In <code>.env</code>, git-ignored; settings read it and refuse to
+start without it. Only <code>.env.example</code> (placeholders) is committed (G10).</p>
+
+<hr>
+<p class="muted">Generated for the d08 defense. Everything above points at real files in this repository —
+open them alongside this page.</p>
+
+</div>
+</body>
+</html>

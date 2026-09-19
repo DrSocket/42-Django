@@ -1,5 +1,5 @@
 """
-Django settings for the d08 project.
+Django settings for the d09 project.
 
 Secrets are never hardcoded here: they are read from a local .env file that
 .gitignore excludes, as required by Chapter I of the subject.
@@ -70,7 +70,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "d08.urls"
+ROOT_URLCONF = "d09.urls"
 
 TEMPLATES = [
     {
@@ -89,8 +89,8 @@ TEMPLATES = [
 ]
 
 # WSGI is kept for completeness; ASGI is what actually serves the project.
-WSGI_APPLICATION = "d08.wsgi.application"
-ASGI_APPLICATION = "d08.asgi.application"
+WSGI_APPLICATION = "d09.wsgi.application"
+ASGI_APPLICATION = "d09.asgi.application"
 
 # The in-memory layer needs no external service, which keeps the project
 # runnable with nothing but `pip install -r requirements.txt`. It is scoped to
@@ -111,12 +111,11 @@ DATABASES = {
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-]
+# Password-strength validators are disabled: accounts here are throwaway
+# demo/evaluation users, so simple passwords are allowed. This also removes the
+# requirements help-text from the create-account form. Password validation is
+# not required by the subject.
+AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

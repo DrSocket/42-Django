@@ -1,4 +1,4 @@
-"""Root URL configuration for the d08 project."""
+"""Root URL configuration for the d09 project."""
 
 from django.contrib import admin
 from django.urls import include, path

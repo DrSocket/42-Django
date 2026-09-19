@@ -1,5 +1,5 @@
 """
-ASGI config for the d08 project.
+ASGI config for the d09 project.
 
 It routes plain HTTP to Django's usual application and WebSocket connections to
 the chat consumers used by ex01-ex04.
@@ -9,7 +9,7 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "d08.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "d09.settings")
 
 # Initialise Django before importing anything that touches the app registry:
 # chat.routing imports the consumer, which imports models.

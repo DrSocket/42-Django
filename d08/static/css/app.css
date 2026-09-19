@@ -87,6 +87,20 @@ input[type="password"] {
 
 #logged-as { margin: 0 0 12px; font-size: 17px; font-weight: 600; }
 
+.success {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #e7f6ec;
+  border: 1px solid #a6d9b8;
+  color: #1a7f37;
+  font-size: 14px;
+}
+
+.sep { margin: 20px 0; border: 0; border-top: 1px solid var(--border); }
+.register-title { font-size: 16px; margin: 0 0 12px; }
+.register .hint { display: block; margin-top: 4px; }
+
 /* ---- room index ---- */
 
 .room-list { margin: 0; padding-left: 18px; }

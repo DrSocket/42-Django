@@ -21,12 +21,12 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| G1 | Project realized in a virtual machine | ⚙️ environment — see README "Running it in a VM" (hypervisor choice, guest setup, host access) |
-| G2 | VM has all necessary software, configured and installed | ⚙️ environment — `requirements.txt`, no external service needed |
-| G3 | OS of the VM is your choice | ⚙️ environment |
-| G4 | VM usable from a cluster computer | ⚙️ environment |
-| G5 | Shared folder between VM and host | ⚙️ environment — see README; `DJANGO_DB_PATH` keeps sqlite off the share, where its locking fails |
-| G6 | That folder used to share with the repository at evaluation | ⚙️ environment |
+| G1 | Project realized in a virtual machine | ✅ `Vagrantfile` (Ubuntu 24.04); `./setup.sh` boots it — see README |
+| G2 | VM has all necessary software, configured and installed | ✅ provisioned by the `Vagrantfile` from `requirements.txt`; no external service needed |
+| G3 | OS of the VM is your choice | ✅ Ubuntu 24.04 (ships Python 3.12) |
+| G4 | VM usable from a cluster computer | ✅ `./setup.sh` runs on a 42 station (Vagrant + VirtualBox preinstalled); box/VM on `/goinfre`, host reaches it at `127.0.0.1:8000` via port-forward |
+| G5 | Shared folder between VM and host | ✅ `Vagrantfile` `synced_folder "." → /vagrant`; `DJANGO_DB_PATH` keeps sqlite off the share (vboxsf lacks the POSIX locking sqlite needs) |
+| G6 | That folder used to share with the repository at evaluation | ✅ the repo is the shared folder at `/vagrant`; the server runs from it |
 | G7 | Must not quit unexpectedly | ✅ `manage.py check` clean; 27 tests pass; verified in-browser |
 | G8 | Test programs encouraged | ✅ `account/tests.py`, `chat/tests.py` |
 | G9 | Only work in the git repository is graded | ✅ everything committed except `.env` and the local database |
@@ -37,7 +37,7 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 | ID | Requirement | Status | Where |
 |----|-------------|--------|-------|
 | S1 | jQuery is the only JavaScript library | ✅ | `static/js/jquery.min.js` (3.7.1) is the only library in the project. The transport in ex01–ex04 is the browser's native `WebSocket`, not a library. No Bootstrap, no Socket.IO. |
-| S2 | A single Django project, not split per exercise | ✅ | One project `d08`, two apps: `account` (ex00) and `chat` (ex01–ex04). |
+| S2 | A single Django project, not split per exercise | ✅ | One Django project (package `d09`), two apps: `account` (ex00) and `chat` (ex01–ex04). |
 | S3 | Leave the default administration application | ✅ | `django.contrib.admin` installed and routed at `/admin/`; `Room` and `Message` registered in `chat/admin.py`. |
 | S4 | `requirements.txt` from `pip freeze` | ✅ | `requirements.txt`, 26 fully-pinned packages. |
 
@@ -48,7 +48,7 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 
 | ID | Requirement | Status | Where |
 |----|-------------|--------|-------|
-| E00.1 | Project named `d09` | ⚠️ | Folder is `d08`; see §10. |
+| E00.1 | Project named `d09` | ✅ | Django project package is named `d09`; the repo/day is `d08`. See §10. |
 | E00.2 | Application named `account` | ✅ | `account/` |
 | E00.3 | `127.0.0.1:8000/account` | ✅ | `account/urls.py` → `path("account", ...)` |
 | E00.4 | Login/logout only through AJAX | ✅ | `account/static/account/js/account.js`; verified: 3 XHRs, 0 page loads |
@@ -122,7 +122,7 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 
 ## 9. How G10 (the new v1.2 credentials rule) is satisfied
 
-- `SECRET_KEY` and `DEBUG` are read from `.env` by `d08/settings.py`. Nothing falls back to a
+- `SECRET_KEY` and `DEBUG` are read from `.env` by `d09/settings.py`. Nothing falls back to a
   hardcoded value: a missing variable raises `ImproperlyConfigured` naming the file to create.
 - `.env` is the first entry in `.gitignore` and is not committed.
 - `.env.example` is committed and holds placeholders only.
@@ -131,22 +131,32 @@ Everything else — all five exercises, the jQuery-only rule, the WebSocket rule
 
 ## 10. Note for the evaluator: `d09` vs `d08`
 
-Exercise 00 says "Create a new project named `d09`" in **both** v1.1 and v1.2, while this
-assignment's folder is `d08` — the subject text appears to carry over from the following day.
-The repository folder and the Django project package are both named `d08` to match the
-assignment. Renaming is a one-line change in `manage.py`, `d08/settings.py`,
-`d08/asgi.py` and `d08/wsgi.py` if the evaluator wants `d09`.
+Exercise 00 says "Create a new project named `d09`" in **both** v1.1 and v1.2, so the Django
+project package is named **`d09`** (`d09/settings.py`, `d09/urls.py`, `d09/asgi.py`,
+`d09/wsgi.py`; `manage.py` and the ASGI/WSGI entry points point at `d09.settings`).
 
-## 11. Verification performed
+The assignment day and this git repository are **`d08`** — the subject text appears to carry
+over from the following day. So: the repo/day is `d08`, the Django project it contains is `d09`.
+
+## 11. Extras beyond the subject
+
+Additive only — the graded login/logout (ex00) and chat (ex01–04) behaviour is unchanged:
+
+- A **create-account form** on `/account` (view `account/register`, template `_register.html`),
+  submitted over AJAX like login, so users can be made from the page itself.
+- A `manage.py createuser` command (`account/management/commands/createuser.py`).
+- Password-strength validators are disabled (`AUTH_PASSWORD_VALIDATORS = []`) so demo/evaluation
+  accounts can use simple passwords; this also removes the requirements help-text from the form.
+
+## 12. Verification performed
 
 - `python manage.py check` — no issues.
 - `python manage.py test` — **27 tests, all passing** (11 for ex00, 16 for ex01–ex04).
-- Driven in Chrome against `runserver`: invalid login, valid login, logout, manual refresh,
-  two users in isolated sessions, join/leave notices, live user list, three-message history,
-  25-message overflow with scroll pinned to the bottom. No console errors or warnings.
-- Dependency portability checked two ways. Resolution with
-  `uv pip compile --python-platform x86_64-unknown-linux-gnu`: works on Python 3.11,
-  3.12 and 3.13, **fails on 3.10** (`autobahn` requires >= 3.11). Then executed for real
-  on **x86_64 Linux** (Debian 13, Python 3.12, `--platform linux/amd64`): installed from
-  `requirements.txt` with every package coming from a wheel, migrated, seeded the three
-  rooms and passed all 27 tests. The arm64 build host needs no different code or pins.
+- End-to-end from a clean state: `./setup.sh` boots the Ubuntu 24.04 VM, shares the repo at
+  `/vagrant`, installs the deps, migrates + seeds the three rooms, and serves `/account`
+  (HTTP 200) reachable from the host at `127.0.0.1:8000` via NAT port-forward.
+- Driven in Chrome against the running server: invalid login, valid login, logout, manual
+  refresh, two users in isolated sessions, join/leave notices, live user list, three-message
+  history, message overflow with scroll pinned to the bottom, and the create-account form.
+- Dependencies install from `requirements.txt` entirely from prebuilt wheels on x86_64 Linux;
+  they resolve on Python 3.11/3.12/3.13 and **fail on 3.10** (`autobahn` requires >= 3.11).

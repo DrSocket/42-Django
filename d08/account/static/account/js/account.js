@@ -51,4 +51,23 @@
             window.alert("Logout request failed. Is the server still running?");
         });
     });
+
+    // Not part of the subject: create a user over AJAX too. Only the
+    // #register-state box is swapped, so the login form above is left alone.
+    $(document).on("submit", "#register-form", function (event) {
+        event.preventDefault();
+
+        var $form = $(this);
+
+        $.ajax({
+            type: "POST",
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            dataType: "json"
+        }).done(function (response) {
+            $("#register-state").html(response.html);
+        }).fail(function () {
+            window.alert("Create-account request failed. Is the server still running?");
+        });
+    });
 }(jQuery));
